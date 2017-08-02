@@ -14,6 +14,8 @@ class SensorData {
     var samples: [[Int]] = []
     var sampleCount = 0
     var period: Int
+    var max: Int = 0
+    var min: Int = 99999999
     
     
     init(period: Int = 18000) {
@@ -33,6 +35,16 @@ class SensorData {
         } else {
             
             samples[pos] = [time, data]
+        }
+        
+        if(data > max){
+            
+            max = data
+        }
+        
+        if(data < min){
+            
+            min = data
         }
     }
     
@@ -54,6 +66,18 @@ class SensorData {
             
             return sum / period
         }
+    }
+    
+    
+    func getMinimum() -> Int {
+        
+        return min
+    }
+    
+    
+    func getMaximum() -> Int {
+        
+        return max
     }
     
 }

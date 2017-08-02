@@ -112,8 +112,8 @@
 		C76C6EC51F30988C0032D277 /* challengeTelemetry */ = {
 			isa = PBXGroup;
 			children = (
-				C76C6EE81F31D0E00032D277 /* Model */,
 				C76C6EEA1F31D1140032D277 /* Controller */,
+				C76C6EE81F31D0E00032D277 /* Model */,
 				C76C6EEE1F31E7760032D277 /* Manager */,
 				C76C6EE91F31D0F00032D277 /* Utility */,
 				C76C6EC61F30988C0032D277 /* AppDelegate.swift */,

@@ -13,9 +13,9 @@ import CocoaAsyncSocket
 
 class SocketManager: NSObject, GCDAsyncUdpSocketDelegate {
 
-    var sensorData: SensorData
-    var port: UInt16
-    var host: String
+    var sensorData: SensorData? = nil
+    var port: UInt16 = 0
+    var host: String = "localhost"
     
     
     
@@ -23,7 +23,7 @@ class SocketManager: NSObject, GCDAsyncUdpSocketDelegate {
     var socket: GCDAsyncUdpSocket? {
         get {
             if _socket == nil {
-                guard let port = UInt16("7700" ), port > 0 else {
+                guard let port = UInt16("7700"), port > 0 else {
                     //log(">>> Unable to init socket: local port unspecified.")
                     return nil
                 }
@@ -48,13 +48,17 @@ class SocketManager: NSObject, GCDAsyncUdpSocketDelegate {
     
     
     
-    init(sensorData: SensorData, port: UInt16, host: String = "localhost") {
+    override init() {
 
+    }
+    
+    
+    func configure(sensorData: SensorData, port: UInt16, host: String = "localhost") {
+        
         self.sensorData = sensorData
         self.port = port
         self.host = host
     }
-    
     
     //sends the given data
     func sentMsg(str: String, timeout: TimeInterval = 2, tag: Int = 0) {
@@ -68,10 +72,19 @@ class SocketManager: NSObject, GCDAsyncUdpSocketDelegate {
         socket?.close()
     }
     
-    
-    func start() -> Bool {
+
+    func beginAnalyzing(onSuccess: @escaping (AnyObject) -> Void , onFailure: @escaping (Error) -> Void) {
         
-        return true
+        self.sentMsg(str: "hello")
+        
+        
+        let deadlineTime = DispatchTime.now() + .seconds(4)
+        DispatchQueue.main.asyncAfter(deadline: deadlineTime, execute: {
+            
+            self.socketClose()
+            print("end close")
+            onSuccess(true as AnyObject)
+        })
     }
     
     
@@ -98,7 +111,7 @@ class SocketManager: NSObject, GCDAsyncUdpSocketDelegate {
             let data = ""+arrBytes[3].uInt8ToHex()+""+arrBytes[4].uInt8ToHex()
             print("data ",data.hexToInt())
             
-            self.sensorData.addSample(time: time.hexToInt(), data: data.hexToInt())
+            self.sensorData?.addSample(time: time.hexToInt(), data: data.hexToInt())
         }
     }
     
@@ -107,5 +120,28 @@ class SocketManager: NSObject, GCDAsyncUdpSocketDelegate {
         
         print("DID Closed connection")
     }
+    
+    
+    public func onSocket(_ sock: GCDAsyncUdpSocket, didConnectToHost host: String!, port: UInt16) {
+        
+        print("DID Connect")
+    }
+    
+    
+    
+    
+    deinit {
+        
+        socket = nil
+        print("Socket :: deinit")
+
+    }
+    
+    
+    // Singlton
+    static let sharedInstance : SocketManager = {
+        let instance = SocketManager()
+        return instance
+    }()
 
 }

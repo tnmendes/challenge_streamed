@@ -10,6 +10,7 @@ import UIKit
 import CocoaAsyncSocket
 
 class ViewController: UIViewController, GCDAsyncUdpSocketDelegate {
+//class ViewController: UIViewController {
 
     
     var _socket: GCDAsyncUdpSocket?
@@ -43,17 +44,33 @@ class ViewController: UIViewController, GCDAsyncUdpSocketDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
- 
+        
+        /*
         let str = "hello"
         //socket?.send(str.data(using: String.Encoding.utf8)!, toHost:"localhost", port: 8501, withTimeout: 2, tag: 0)
-        print("Data sent: \(str)")
+        print("Data sent: \(str)")*/
         
+        let sensorData = SensorData(period: 50)
+        let socket = SocketManager.sharedInstance
+        socket.configure(sensorData: sensorData, port: 8501)
+        
+        socket.beginAnalyzing(onSuccess: {_ in
+            
+            print("Media ",sensorData.getMovingAverage)
+            print("Max ", sensorData.getMaximum())
+            print("Min ", sensorData.getMinimum())
+            
+        }, onFailure: {_ in 
+            
+            print("ttt")
+        })
     }
-
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
+    
     
     
     func udpSocket(_ sock: GCDAsyncUdpSocket, didReceive data: Data, fromAddress address: Data, withFilterContext filterContext: Any?) {
@@ -81,7 +98,7 @@ class ViewController: UIViewController, GCDAsyncUdpSocketDelegate {
             print("data ",data.hexToInt())
         }
     }
-
+    
 }
 
 

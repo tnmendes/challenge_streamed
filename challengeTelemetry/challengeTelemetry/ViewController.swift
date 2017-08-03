@@ -9,94 +9,87 @@
 import UIKit
 import CocoaAsyncSocket
 
-class ViewController: UIViewController, GCDAsyncUdpSocketDelegate {
-//class ViewController: UIViewController {
+class ViewController: UIViewController {
 
     
-    var _socket: GCDAsyncUdpSocket?
-    var socket: GCDAsyncUdpSocket? {
-        get {
-            if _socket == nil {
-                guard let port = UInt16("7700" ), port > 0 else {
-                    //log(">>> Unable to init socket: local port unspecified.")
-                    return nil
-                }
-                let sock = GCDAsyncUdpSocket(delegate: self, delegateQueue: DispatchQueue.main)
-                do {
-                    try sock.bind(toPort: port)
-                    try sock.beginReceiving()
-                } catch let err as NSError {
-                    //log(">>> Error while initializing socket: \(err.localizedDescription)")
-                    sock.close()
-                    return nil
-                }
-                _socket = sock
-            }
-            return _socket
-        }
-        set {
-            _socket?.close()
-            _socket = newValue
-        }
-    }
-
+    @IBOutlet weak var hostTextField: UITextField!
+    @IBOutlet weak var portTextField: UITextField!
+    @IBOutlet weak var maxLabel: UILabel!
+    @IBOutlet weak var minLabel: UILabel!
+    @IBOutlet weak var avgLabel: UILabel!
+    @IBOutlet weak var statusLabel: UILabel!
     
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        /*
-        let str = "hello"
-        //socket?.send(str.data(using: String.Encoding.utf8)!, toHost:"localhost", port: 8501, withTimeout: 2, tag: 0)
-        print("Data sent: \(str)")*/
-        
-        let sensorData = SensorData(period: 50)
-        let socket = SocketManager.sharedInstance
-        socket.configure(sensorData: sensorData, port: 8501)
-        
-        socket.beginAnalyzing(onSuccess: {_ in
-            
-            print("Media ",sensorData.getMovingAverage)
-            print("Max ", sensorData.getMaximum())
-            print("Min ", sensorData.getMinimum())
-            
-        }, onFailure: {_ in 
-            
-            print("ttt")
-        })
+    
+        portTextField.keyboardType = UIKeyboardType.numberPad
+        self.hideKeyboardWhenTappedAround()
     }
+    
+    
+    /// This will be the event that will start the entire UDP connection process
+    @IBAction func beginAnalyzing() {
+        
+        if (Int(self.portTextField.text!)! <= 0 || Int(self.portTextField.text!)! > 65535){
+            
+            self.alert(message: "The port value must be between 0 and 65535")
+            return
+        }
+        
+        let sensorData = SensorData(period: Configuration.defaultPeriod)
+        self.statusLabel.text = "Analyzing..."
+
+        
+        DispatchQueue.global(qos: .default).async {
+            
+            let socket = SocketManager.sharedInstance
+            socket.configure(sensorData: sensorData, port: UInt16(self.portTextField.text!)!, host: self.hostTextField.text!)
+            
+            socket.beginAnalyzing(onComplete: {_ in
+                
+                self.reloadLabels(sensorData: sensorData)
+                socket.dispose()
+            }, onFail: {_ in
+                
+                DispatchQueue.main.async() {
+                    self.alert(message: "Missing some fields")
+                }
+                socket.dispose()
+            })
+        }
+        
+       
+    }
+    
+    
+    /// Helper funtion to reload the sensor related labels
+    ///
+    /// - Parameter sensorData
+    func reloadLabels(sensorData: SensorData) {
+        
+        DispatchQueue.main.async() { //get the main thread todo UI changes
+            
+            if(sensorData.getSampleCount() == 0){
+                
+                self.alert(message: "No data return, server is off?")
+                self.statusLabel.text = "No data"
+                //socket.dispose()
+                return
+            }
+            
+            self.statusLabel.text = "Done!"
+            self.maxLabel.text = String(sensorData.getMaximum())
+            self.minLabel.text = String(sensorData.getMinimum())
+            self.avgLabel.text = String(sensorData.getMovingAverage)
+        }
+      
+    }
+    
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
-    }
-    
-    
-    
-    func udpSocket(_ sock: GCDAsyncUdpSocket, didReceive data: Data, fromAddress address: Data, withFilterContext filterContext: Any?) {
-        
-        guard let stringData = String(data: data, encoding: String.Encoding.utf8) else {
-            //log(">>> Data received, but cannot be converted to String")
-            return
-        }
-        //log("Data received: \(stringData)")
-        
-        
-        if let nsdata1 = Data(base64Encoded: stringData, options: NSData.Base64DecodingOptions.ignoreUnknownCharacters) {
-            
-            let arr2 = nsdata1.withUnsafeBytes {
-                Array(UnsafeBufferPointer<UInt8>(start: $0, count: nsdata1.count/MemoryLayout<UInt8>.size))
-            }
-            print("Array: ",arr2)
-            
-            
-            let data2 = ""+arr2[0].uInt8ToHex()+""+arr2[1].uInt8ToHex()+""+arr2[2].uInt8ToHex()
-            print("time ",data2.hexToInt())
-            
-            
-            let data = ""+arr2[3].uInt8ToHex()+""+arr2[4].uInt8ToHex()
-            print("data ",data.hexToInt())
-        }
     }
     
 }

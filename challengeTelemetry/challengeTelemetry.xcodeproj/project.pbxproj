@@ -22,6 +22,8 @@
 		C76C6EF11F31E7CA0032D277 /* SocketManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = C76C6EEF1F31E7CA0032D277 /* SocketManager.swift */; };
 		C76C6EF31F31EA3F0032D277 /* Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = C76C6EF21F31EA3F0032D277 /* Extension.swift */; };
 		C76C6EF41F31EA3F0032D277 /* Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = C76C6EF21F31EA3F0032D277 /* Extension.swift */; };
+		C76C6EF61F3338540032D277 /* Configuration.swift in Sources */ = {isa = PBXBuildFile; fileRef = C76C6EF51F3338540032D277 /* Configuration.swift */; };
+		C76C6EF71F3338540032D277 /* Configuration.swift in Sources */ = {isa = PBXBuildFile; fileRef = C76C6EF51F3338540032D277 /* Configuration.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -54,6 +56,7 @@
 		C76C6EEB1F31DD000032D277 /* SensorData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SensorData.swift; path = Model/SensorData.swift; sourceTree = "<group>"; };
 		C76C6EEF1F31E7CA0032D277 /* SocketManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SocketManager.swift; path = Manager/SocketManager.swift; sourceTree = "<group>"; };
 		C76C6EF21F31EA3F0032D277 /* Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Extension.swift; path = Utility/Extension.swift; sourceTree = "<group>"; };
+		C76C6EF51F3338540032D277 /* Configuration.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Configuration.swift; path = Utility/Configuration.swift; sourceTree = "<group>"; };
 		E915A11EC717E3E1A4B1C982 /* Pods-challengeTelemetryTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-challengeTelemetryTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-challengeTelemetryTests/Pods-challengeTelemetryTests.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -88,6 +91,16 @@
 			name = Pods;
 			sourceTree = "<group>";
 		};
+		C732E9981F338070002530E1 /* View */ = {
+			isa = PBXGroup;
+			children = (
+				C76C6ECA1F30988C0032D277 /* Main.storyboard */,
+				C76C6ECF1F30988C0032D277 /* LaunchScreen.storyboard */,
+				C76C6ECD1F30988C0032D277 /* Assets.xcassets */,
+			);
+			name = View;
+			sourceTree = "<group>";
+		};
 		C76C6EBA1F30988C0032D277 = {
 			isa = PBXGroup;
 			children = (
@@ -112,14 +125,12 @@
 		C76C6EC51F30988C0032D277 /* challengeTelemetry */ = {
 			isa = PBXGroup;
 			children = (
+				C732E9981F338070002530E1 /* View */,
 				C76C6EEA1F31D1140032D277 /* Controller */,
 				C76C6EE81F31D0E00032D277 /* Model */,
 				C76C6EEE1F31E7760032D277 /* Manager */,
 				C76C6EE91F31D0F00032D277 /* Utility */,
 				C76C6EC61F30988C0032D277 /* AppDelegate.swift */,
-				C76C6ECA1F30988C0032D277 /* Main.storyboard */,
-				C76C6ECD1F30988C0032D277 /* Assets.xcassets */,
-				C76C6ECF1F30988C0032D277 /* LaunchScreen.storyboard */,
 				C76C6ED21F30988C0032D277 /* Info.plist */,
 			);
 			path = challengeTelemetry;
@@ -146,6 +157,7 @@
 			isa = PBXGroup;
 			children = (
 				C76C6EF21F31EA3F0032D277 /* Extension.swift */,
+				C76C6EF51F3338540032D277 /* Configuration.swift */,
 			);
 			name = Utility;
 			sourceTree = "<group>";
@@ -381,6 +393,7 @@
 			files = (
 				C76C6EE71F3099320032D277 /* README.md in Sources */,
 				C76C6EC91F30988C0032D277 /* ViewController.swift in Sources */,
+				C76C6EF61F3338540032D277 /* Configuration.swift in Sources */,
 				C76C6EC71F30988C0032D277 /* AppDelegate.swift in Sources */,
 				C76C6EF31F31EA3F0032D277 /* Extension.swift in Sources */,
 				C76C6EEC1F31DD000032D277 /* SensorData.swift in Sources */,
@@ -393,6 +406,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				C76C6EDC1F30988D0032D277 /* challengeTelemetryTests.swift in Sources */,
+				C76C6EF71F3338540032D277 /* Configuration.swift in Sources */,
 				C76C6EF11F31E7CA0032D277 /* SocketManager.swift in Sources */,
 				C76C6EED1F31DD000032D277 /* SensorData.swift in Sources */,
 				C76C6EF41F31EA3F0032D277 /* Extension.swift in Sources */,

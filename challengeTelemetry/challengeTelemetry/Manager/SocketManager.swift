@@ -15,9 +15,7 @@ class SocketManager: NSObject, GCDAsyncUdpSocketDelegate {
 
     var sensorData: SensorData? = nil
     var port: UInt16 = 0
-    var host: String = "localhost"
-    
-    
+    var host: String = Configuration.defaultHost
     
     var _socket: GCDAsyncUdpSocket?
     var socket: GCDAsyncUdpSocket? {
@@ -32,7 +30,8 @@ class SocketManager: NSObject, GCDAsyncUdpSocketDelegate {
                     try sock.bind(toPort: port)
                     try sock.beginReceiving()
                 } catch let err as NSError {
-                    //log(">>> Error while initializing socket: \(err.localizedDescription)")
+                    
+                    print("Error while initializing socket: \(err.localizedDescription)")
                     sock.close()
                     return nil
                 }
@@ -48,11 +47,12 @@ class SocketManager: NSObject, GCDAsyncUdpSocketDelegate {
     
     
     
-    override init() {
-
-    }
-    
-    
+    /// <#Description#>
+    ///
+    /// - Parameters:
+    ///   - sensorData: <#sensorData description#>
+    ///   - port: <#port description#>
+    ///   - host: <#host description#>
     func configure(sensorData: SensorData, port: UInt16, host: String = "localhost") {
         
         self.sensorData = sensorData
@@ -60,88 +60,150 @@ class SocketManager: NSObject, GCDAsyncUdpSocketDelegate {
         self.host = host
     }
     
+    
     //sends the given data
+    
+    /// <#Description#>
+    ///
+    /// - Parameters:
+    ///   - str: <#str description#>
+    ///   - timeout: <#timeout description#>
+    ///   - tag: <#tag description#>
     func sentMsg(str: String, timeout: TimeInterval = 2, tag: Int = 0) {
         
         socket?.send(str.data(using: String.Encoding.utf8)!, toHost:self.host, port: self.port, withTimeout: timeout, tag: tag)
     }
     
     
+    
+    /// <#Description#>
     func socketClose() {
         
         socket?.close()
     }
     
 
-    func beginAnalyzing(onSuccess: @escaping (AnyObject) -> Void , onFailure: @escaping (Error) -> Void) {
+    
+    /// <#Description#>
+    ///
+    /// - Parameters:
+    ///   - onComplete: <#onComplete description#>
+    ///   - onFail: <#onFail description#>
+    func beginAnalyzing(onComplete: @escaping () -> Void, onFail: @escaping () -> Void) {
+        
+        if(!validateSocketParameters()){
+            
+            onFail()
+            return
+        }
         
         self.sentMsg(str: "hello")
         
-        
-        let deadlineTime = DispatchTime.now() + .seconds(4)
+        let deadlineTime = DispatchTime.now() + .seconds(Configuration.analyzingDurationSeconds)
         DispatchQueue.main.asyncAfter(deadline: deadlineTime, execute: {
             
             self.socketClose()
-            print("end close")
-            onSuccess(true as AnyObject)
+            onComplete()
         })
     }
     
     
+    // Called when the socket has received the requested datagram.
+    
+    
+    /// <#Description#>
+    ///
+    /// - Parameters:
+    ///   - sock: <#sock description#>
+    ///   - data: <#data description#>
+    ///   - address: <#address description#>
+    ///   - filterContext: <#filterContext description#>
     func udpSocket(_ sock: GCDAsyncUdpSocket, didReceive data: Data, fromAddress address: Data, withFilterContext filterContext: Any?) {
         
         guard let stringData = String(data: data, encoding: String.Encoding.utf8) else {
-            //log(">>> Data received, but cannot be converted to String")
-            return
+            
+            return // Data received, but cannot be converted to String"
         }
-        //log("Data received: \(stringData)")
-        
         
         if let nsdata = Data(base64Encoded: stringData, options: NSData.Base64DecodingOptions.ignoreUnknownCharacters) {
             
             let arrBytes = nsdata.withUnsafeBytes {
                 Array(UnsafeBufferPointer<UInt8>(start: $0, count: nsdata.count/MemoryLayout<UInt8>.size))
             }
-            print("Array: ",arrBytes)
+            //print("Array: ",arrBytes)
             
             
             let time = ""+arrBytes[0].uInt8ToHex()+""+arrBytes[1].uInt8ToHex()+""+arrBytes[2].uInt8ToHex()
-            print("time ",time.hexToInt())
+            //print("time ",time.hexToInt())
             
             let data = ""+arrBytes[3].uInt8ToHex()+""+arrBytes[4].uInt8ToHex()
-            print("data ",data.hexToInt())
+            //print("data ",data.hexToInt())
             
             self.sensorData?.addSample(time: time.hexToInt(), data: data.hexToInt())
         }
     }
     
     
+    // Called when the socket is closed.
+    
+    /// <#Description#>
+    ///
+    /// - Parameters:
+    ///   - sock: <#sock description#>
+    ///   - error: <#error description#>
     func udpSocketDidClose(_ sock: GCDAsyncUdpSocket, withError error: Error?){
         
         print("DID Closed connection")
     }
     
     
-    public func onSocket(_ sock: GCDAsyncUdpSocket, didConnectToHost host: String!, port: UInt16) {
+    
+    /// <#Description#>
+    ///
+    /// - Returns: <#return value description#>
+    func validateSocketParameters() -> Bool {
         
-        print("DID Connect")
+        if(sensorData != nil && port >= 0 && port <= 65535 && host != ""){
+            
+            return true
+        }
+        return false
     }
-    
-    
     
     
     deinit {
         
         socket = nil
+        sensorData = nil
         print("Socket :: deinit")
-
+    }
+    
+    
+    // MARK: Singlton
+    
+    
+    struct Static
+    {
+        static var instance: SocketManager?
     }
     
     
     // Singlton
-    static let sharedInstance : SocketManager = {
-        let instance = SocketManager()
-        return instance
-    }()
-
+    class var sharedInstance: SocketManager
+    {
+        if Static.instance == nil
+        {
+            Static.instance = SocketManager()
+        }
+        
+        return Static.instance!
+    }
+    
+    
+    // Dispose Singlton
+    func dispose()
+    {
+        SocketManager.Static.instance = nil
+        print("Disposed Singleton instance")
+    }
 }

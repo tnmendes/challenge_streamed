@@ -14,16 +14,24 @@ class SensorData {
     var samples: [[Int]] = []
     var sampleCount = 0
     var period: Int
-    var max: Int = 0
-    var min: Int = 99999999
+    var max: Int = Int.min
+    var min: Int = Int.max
     
     
-    init(period: Int = 18000) {
+    /// Initializer
+    ///
+    /// - Parameter period: The length of points that will be recived (optional)
+    init(period: Int = Configuration.defaultPeriod) {
         
         self.period = period
     }
     
     
+    /// All samples will be added and processed in this function
+    ///
+    /// - Parameters:
+    ///   - time: <#time description#>
+    ///   - data: <#data description#>
     func addSample(time: Int, data: Int){
         
         sampleCount = sampleCount + 1
@@ -49,16 +57,18 @@ class SensorData {
     }
     
     
+    
+    /// <#Description#>
     var getMovingAverage: Int {
         
+        
         let sum = samples.reduce(0, { $0 + $1[1] })
-        /* isto é a mesma coisa
-            array.forEach({ sum += $0.value})
-            // or
-            for element in array {
-                sum += element.value
-            }*/
- 
+        
+        if(sum == 0){
+            
+            return 0
+        }
+
         if period > samples.count {
             
             return sum / samples.count
@@ -69,15 +79,36 @@ class SensorData {
     }
     
     
+    /// <#Description#>
+    ///
+    /// - Returns: <#return value description#>
     func getMinimum() -> Int {
         
         return min
     }
     
     
+    /// <#Description#>
+    ///
+    /// - Returns: <#return value description#>
     func getMaximum() -> Int {
         
         return max
+    }
+    
+    
+    /// <#Description#>
+    ///
+    /// - Returns: <#return value description#>
+    func getSampleCount() -> Int {
+        
+        return sampleCount
+    }
+    
+    
+    deinit {
+        
+        print("SensorData :: deinit")
     }
     
 }

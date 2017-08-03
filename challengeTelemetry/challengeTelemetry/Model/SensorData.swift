@@ -30,12 +30,12 @@ class SensorData {
     /// All samples will be added and processed in this function
     ///
     /// - Parameters:
-    ///   - time: <#time description#>
-    ///   - data: <#data description#>
+    ///   - time: time marker
+    ///   - data: sensor data
     func addSample(time: Int, data: Int){
         
         sampleCount = sampleCount + 1
-        let pos = Int(fmodf(Float(sampleCount), Float(period)))  // (55,40) = 15 || (15,40) = 15
+        let pos = Int(fmodf(Float(sampleCount), Float(period)))  // Example fmodf(55,40) = 15 || fmodf(15,40) = 15
         
         if pos >= samples.count {
             
@@ -57,8 +57,8 @@ class SensorData {
     }
     
     
-    
-    /// <#Description#>
+    /// Moving average is a calculation to analyze data points
+    ///
     var getMovingAverage: Int {
         
         
@@ -79,27 +79,27 @@ class SensorData {
     }
     
     
-    /// <#Description#>
+    /// Minimum value of the samples
     ///
-    /// - Returns: <#return value description#>
+    /// - Returns: minimum value of the samples
     func getMinimum() -> Int {
         
         return min
     }
     
     
-    /// <#Description#>
+    /// Maximum value of the samples
     ///
-    /// - Returns: <#return value description#>
+    /// - Returns: maximum value
     func getMaximum() -> Int {
         
         return max
     }
     
     
-    /// <#Description#>
+    /// Input counter of the samples
     ///
-    /// - Returns: <#return value description#>
+    /// - Returns: counter
     func getSampleCount() -> Int {
         
         return sampleCount

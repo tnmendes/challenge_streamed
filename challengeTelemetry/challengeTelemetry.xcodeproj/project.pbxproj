@@ -15,7 +15,6 @@
 		C76C6ECE1F30988C0032D277 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C76C6ECD1F30988C0032D277 /* Assets.xcassets */; };
 		C76C6ED11F30988C0032D277 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C76C6ECF1F30988C0032D277 /* LaunchScreen.storyboard */; };
 		C76C6EDC1F30988D0032D277 /* challengeTelemetryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C76C6EDB1F30988D0032D277 /* challengeTelemetryTests.swift */; };
-		C76C6EE71F3099320032D277 /* README.md in Sources */ = {isa = PBXBuildFile; fileRef = C76C6EE61F3099320032D277 /* README.md */; };
 		C76C6EEC1F31DD000032D277 /* SensorData.swift in Sources */ = {isa = PBXBuildFile; fileRef = C76C6EEB1F31DD000032D277 /* SensorData.swift */; };
 		C76C6EED1F31DD000032D277 /* SensorData.swift in Sources */ = {isa = PBXBuildFile; fileRef = C76C6EEB1F31DD000032D277 /* SensorData.swift */; };
 		C76C6EF01F31E7CA0032D277 /* SocketManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = C76C6EEF1F31E7CA0032D277 /* SocketManager.swift */; };
@@ -52,7 +51,6 @@
 		C76C6ED71F30988D0032D277 /* challengeTelemetryTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = challengeTelemetryTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		C76C6EDB1F30988D0032D277 /* challengeTelemetryTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = challengeTelemetryTests.swift; sourceTree = "<group>"; };
 		C76C6EDD1F30988D0032D277 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		C76C6EE61F3099320032D277 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; name = README.md; path = ../README.md; sourceTree = "<group>"; };
 		C76C6EEB1F31DD000032D277 /* SensorData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SensorData.swift; path = Model/SensorData.swift; sourceTree = "<group>"; };
 		C76C6EEF1F31E7CA0032D277 /* SocketManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SocketManager.swift; path = Manager/SocketManager.swift; sourceTree = "<group>"; };
 		C76C6EF21F31EA3F0032D277 /* Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Extension.swift; path = Utility/Extension.swift; sourceTree = "<group>"; };
@@ -107,7 +105,6 @@
 				C76C6EC51F30988C0032D277 /* challengeTelemetry */,
 				C76C6EDA1F30988D0032D277 /* challengeTelemetryTests */,
 				C76C6EC41F30988C0032D277 /* Products */,
-				C76C6EE61F3099320032D277 /* README.md */,
 				86118C23C690F542E2AA2A41 /* Pods */,
 				D4E82624A389A1234054A4A4 /* Frameworks */,
 			);
@@ -306,7 +303,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n";
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n";
 			showEnvVarsInLog = 0;
 		};
 		31469A81B73EEF0565677551 /* [CP] Check Pods Manifest.lock */ = {
@@ -321,7 +318,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n";
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n";
 			showEnvVarsInLog = 0;
 		};
 		4C18099C8491822C4DE5FD80 /* [CP] Copy Pods Resources */ = {
@@ -391,7 +388,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				C76C6EE71F3099320032D277 /* README.md in Sources */,
 				C76C6EC91F30988C0032D277 /* ViewController.swift in Sources */,
 				C76C6EF61F3338540032D277 /* Configuration.swift in Sources */,
 				C76C6EC71F30988C0032D277 /* AppDelegate.swift in Sources */,

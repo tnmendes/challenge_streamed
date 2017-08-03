@@ -17,5 +17,8 @@ struct Configuration {
     /// URL of the API
     static let defaultHost                      = "Localhost"
     /// How much time the system should save samples
-    static let analyzingDurationSeconds         = 4
+    static let analyzingDurationSeconds         = 30
+    /// Local Port
+    static let localPort                        = "7700"
+    
 }

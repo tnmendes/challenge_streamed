@@ -29,6 +29,7 @@ class ViewController: UIViewController {
     
     
     /// This will be the event that will start the entire UDP connection process
+    ///
     @IBAction func beginAnalyzing() {
         
         if (Int(self.portTextField.text!)! <= 0 || Int(self.portTextField.text!)! > 65535){
@@ -74,7 +75,6 @@ class ViewController: UIViewController {
                 
                 self.alert(message: "No data return, server is off?")
                 self.statusLabel.text = "No data"
-                //socket.dispose()
                 return
             }
             
@@ -84,12 +84,6 @@ class ViewController: UIViewController {
             self.avgLabel.text = String(sensorData.getMovingAverage)
         }
       
-    }
-    
-    
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
     }
     
 }

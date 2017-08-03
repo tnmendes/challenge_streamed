@@ -13,7 +13,7 @@ import CocoaAsyncSocket
 
 class challengeTelemetryTests: XCTestCase {
     
-    let arraySamples = [[1,100],[1,200],[1,300],[1,400],[1,500],]
+    let arraySamples = [[1,100],[2,200],[3,300],[4,400],[5,500],]
     
     
     // Test with a list of known data the returned values

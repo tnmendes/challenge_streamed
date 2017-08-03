@@ -10,14 +10,15 @@ import Foundation
 import UIKit
 
 
+// MARK: String
 
 extension String {
     
     //: ### Base64 encoding a string
     
-    /// <#Description#>
+    /// Convert hexadecimal to decimal (Int)
     ///
-    /// - Returns: <#return value description#>
+    /// - Returns: Int
     public func hexToInt() -> Int {
         
         return Int(self, radix: 16)!
@@ -25,19 +26,22 @@ extension String {
 }
 
 
+// MARK: UInt8
 
 extension UInt8 {
     
     
-    /// <#Description#>
+    /// Convert UInt8 to hexadecimal
     ///
-    /// - Returns: <#return value description#>
+    /// - Returns: String with Hexadecimal
     public func uInt8ToHex() -> String {
         
         return String(self, radix: 16)
     }
 }
 
+
+// MARK: UIViewController
 
 extension UIViewController {
     

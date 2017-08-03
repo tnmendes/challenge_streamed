@@ -21,8 +21,8 @@ class SocketManager: NSObject, GCDAsyncUdpSocketDelegate {
     var socket: GCDAsyncUdpSocket? {
         get {
             if _socket == nil {
-                guard let port = UInt16("7700"), port > 0 else {
-                    //log(">>> Unable to init socket: local port unspecified.")
+                // Random local port
+                guard let port = UInt16(Configuration.localPort), port > 0 else {
                     return nil
                 }
                 let sock = GCDAsyncUdpSocket(delegate: self, delegateQueue: DispatchQueue.main)
@@ -46,13 +46,12 @@ class SocketManager: NSObject, GCDAsyncUdpSocketDelegate {
     }
     
     
-    
-    /// <#Description#>
+    /// Mandatory settings for the running of the socket
     ///
     /// - Parameters:
-    ///   - sensorData: <#sensorData description#>
-    ///   - port: <#port description#>
-    ///   - host: <#host description#>
+    ///   - sensorData: Object of SensorData that will be filled
+    ///   - port: server port
+    ///   - host: server host name or IP
     func configure(sensorData: SensorData, port: UInt16, host: String = "localhost") {
         
         self.sensorData = sensorData
@@ -61,34 +60,31 @@ class SocketManager: NSObject, GCDAsyncUdpSocketDelegate {
     }
     
     
-    //sends the given data
-    
-    /// <#Description#>
+    /// Sends the given data to the server by UDP
     ///
     /// - Parameters:
-    ///   - str: <#str description#>
-    ///   - timeout: <#timeout description#>
-    ///   - tag: <#tag description#>
+    ///   - str: string to be send
+    ///   - timeout: how much time until give up
+    ///   - tag: The tag is for your convenience, can use it as an array index, state id.
     func sentMsg(str: String, timeout: TimeInterval = 2, tag: Int = 0) {
         
         socket?.send(str.data(using: String.Encoding.utf8)!, toHost:self.host, port: self.port, withTimeout: timeout, tag: tag)
     }
     
     
-    
-    /// <#Description#>
+    /// Terminates with socket connection
+    ///
     func socketClose() {
         
         socket?.close()
     }
     
-
     
-    /// <#Description#>
+    /// This function does everything necessary to trigger the process to connect to the server and after to terminate socket
     ///
     /// - Parameters:
-    ///   - onComplete: <#onComplete description#>
-    ///   - onFail: <#onFail description#>
+    ///   - onComplete: event released in success
+    ///   - onFail: event released if some parameter are missing
     func beginAnalyzing(onComplete: @escaping () -> Void, onFail: @escaping () -> Void) {
         
         if(!validateSocketParameters()){
@@ -108,16 +104,12 @@ class SocketManager: NSObject, GCDAsyncUdpSocketDelegate {
     }
     
     
-    // Called when the socket has received the requested datagram.
+    // MARK: Delegate
+
     
-    
-    /// <#Description#>
+    /// Called when the socket has received the requested datagram.
+    /// Delegate from CocoaAsyncSocket.
     ///
-    /// - Parameters:
-    ///   - sock: <#sock description#>
-    ///   - data: <#data description#>
-    ///   - address: <#address description#>
-    ///   - filterContext: <#filterContext description#>
     func udpSocket(_ sock: GCDAsyncUdpSocket, didReceive data: Data, fromAddress address: Data, withFilterContext filterContext: Any?) {
         
         guard let stringData = String(data: data, encoding: String.Encoding.utf8) else {
@@ -144,23 +136,16 @@ class SocketManager: NSObject, GCDAsyncUdpSocketDelegate {
     }
     
     
-    // Called when the socket is closed.
-    
-    /// <#Description#>
+    /// Called when the socket is closed.
+    /// Delegate from CocoaAsyncSocket.
     ///
-    /// - Parameters:
-    ///   - sock: <#sock description#>
-    ///   - error: <#error description#>
-    func udpSocketDidClose(_ sock: GCDAsyncUdpSocket, withError error: Error?){
-        
-        print("DID Closed connection")
-    }
+    func udpSocketDidClose(_ sock: GCDAsyncUdpSocket, withError error: Error?){}
     
     
     
-    /// <#Description#>
+    /// Validator of the fields in the configurations to check if they exist and if they are correct.
     ///
-    /// - Returns: <#return value description#>
+    /// - Returns: Bool
     func validateSocketParameters() -> Bool {
         
         if(sensorData != nil && port >= 0 && port <= 65535 && host != ""){
@@ -203,7 +188,7 @@ class SocketManager: NSObject, GCDAsyncUdpSocketDelegate {
     // Dispose Singlton
     func dispose()
     {
+        
         SocketManager.Static.instance = nil
-        print("Disposed Singleton instance")
     }
 }
